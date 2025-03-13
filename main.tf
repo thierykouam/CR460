@@ -128,7 +128,7 @@ resource "azurerm_container_group" "container_group" {
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   ip_address_type     = "Public"
-  dns_name_label      = "cr460_azure" // ***IMPORTANT: CHANGE THIS***
+  dns_name_label      = "cr460-azure" // ***IMPORTANT: CHANGE THIS***
   os_type             = "Linux"
 
   container {
