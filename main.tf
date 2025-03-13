@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.0"
+      version = "~> 2.0"
     }
   }
     cloud {
@@ -124,22 +124,35 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 resource "azurerm_container_group" "container_group" {
-  name                = "terraform-container"
+  name                = "terraform-container"  // Keep this name, or choose your own
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   ip_address_type     = "Public"
-  dns_name_label      = "your-unique-dns-label" // Replace with a unique DNS label
+  dns_name_label      = "cr460_azure" // ***IMPORTANT: CHANGE THIS***
   os_type             = "Linux"
 
   container {
-    name   = "my-container"
-    image  = "nginx:latest" // Use any Docker image you want
-    cpu    = "0.5"
-    memory = "1.5"
+    name   = "cr460-container"
+    image  = "nginx:latest" // Or your preferred Docker image
+    cpu    = "0.5"  // Adjust as needed
+    memory = "1.5"  // Adjust as needed
 
     ports {
       port     = 80
       protocol = "TCP"
     }
+    # Optional: Environment variables for the container
+    environment_variables = {
+      "MY_VARIABLE" = "my_value"  // Example - add your own
+    }
   }
+    restart_policy = "OnFailure"
+}
+
+output "container_group_ip" {
+  value = azurerm_container_group.container_group.ip_address
+}
+
+output "container_group_fqdn" {
+    value = azurerm_container_group.container_group.fqdn
 }
